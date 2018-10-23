@@ -1,33 +1,40 @@
 ﻿using System;
+using NUnit.Framework;
 
 namespace DistanceTask
 {
-	public static class DistanceTask
-	{
-		// Расстояние от точки (x, y) до отрезка AB с координатами A(ax, ay), B(bx, by)
-	    public static double GetDistanceToSegment(double ax, double ay, double bx, double by, double x, double y)
-	    {
-            if (ax == bx && ay == by)
+    public static class DistanceTask
+    {
+        // Расстояние от точки (x, y) до отрезка AB с координатами A(ax, ay), B(bx, by)
+        public static double GetDistanceToSegment(double ax, double ay, double bx, double by, double x, double y)
+        {
+            double ak = Math.Sqrt((x - ax) * (x - ax) + (y - ay) * (y - ay));
+            double kb = Math.Sqrt((x - bx) * (x - bx) + (y - by) * (y - by));
+            double ab = Math.Sqrt((ax - bx) * (ax - bx) + (ay - by) * (ay - by));
+
+            //скалярное произведение векторов
+            double mulScalarAKAB = (x - ax) * (bx - ax) + (y - ay) * (by - ay);
+            double mulScalarBKAB = (x - bx) * (-bx + ax) + (y - by) * (-by + ay);
+
+            if (ab == 0)
             {
-                return Math.Sqrt((ax - x) * (ax - x) + (ay - y) * (ay - y));
+                return ak;
             }
 
-            var t = ((x - ax) * (bx - ax) + (y - ay) * (by - ay)) / ((bx - ax) * (bx - ax) + (by - ay) * (by - ay));
-
-            if (t > 1)
+            if (mulScalarAKAB >= 0 && mulScalarBKAB >= 0)
             {
-                t = 1;
+                double p = (ak + kb + ab) / 2.0;
+                double s = Math.Sqrt(Math.Abs((p * (p - ak) * (p - kb) * (p - ab))));
+
+                return (2.0 * s) / ab;
             }
 
-            if (t < 0)
+            else if (mulScalarAKAB < 0 || mulScalarBKAB < 0)
             {
-                t = 0;
+                return Math.Min(ak, kb);
             }
 
-            var k = (ax - x + (bx - ax) * t) * (ax - x + (bx - ax) * t) +
-                    (ay - y + (by - ay) * t) * (ay - y + (by - ay) * t);
-
-            return Math.Sqrt(k);
+            else return 0;
         }
-	}
+    }
 }
