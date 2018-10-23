@@ -7,8 +7,8 @@ namespace Rectangles
 		// Пересекаются ли два прямоугольника (пересечение только по границе также считается пересечением)
 		public static bool AreIntersected(Rectangle r1, Rectangle r2)
 		{
-            return IsIntersected(r1.Left, r1.Right, r2.Left, r2.Right) 
-                   && IsIntersected(r1.Top, r1.Bottom, r2.Top, r2.Bottom);
+            return AreIntersect(r1.Left, r1.Right, r2.Left, r2.Right) 
+                   && AreIntersect(r1.Top, r1.Bottom, r2.Top, r2.Bottom);
         }
 
         // Площадь пересечения прямоугольников
@@ -25,21 +25,19 @@ namespace Rectangles
         // Если прямоугольники совпадают, можно вернуть номер любого из них.
         public static int IndexOfInnerRectangle(Rectangle r1, Rectangle r2)
         {
-            if (GetIntersectionLength(r1.Left, r1.Right, r2.Left, r2.Right) == r1.Width
-		        && GetIntersectionLength(r1.Top, r1.Bottom, r2.Top, r2.Bottom) == r1.Height)
-		    {
-		        return 0;
-		    }
+            if (r1.Left >= r2.Left && r1.Right <= r2.Right && r1.Top >= r2.Top && r1.Bottom <= r2.Bottom)
+            {
+                return 0;
+            }
 
-		    if (GetIntersectionLength(r1.Left, r1.Right, r2.Left, r2.Right) == r2.Width
-		        && GetIntersectionLength(r1.Top, r1.Bottom, r2.Top, r2.Bottom) == r2.Height)
-		    {
-		        return 1;
-		    }
+            if (r2.Left >= r1.Left && r2.Right <= r1.Right && r2.Top >= r1.Top && r2.Bottom <= r1.Bottom)
+            {
+                return 1;
+            }
 		    return -1;
 		}
 
-	    private static bool IsIntersected(int x1, int x2, int y1, int y2)
+	    private static bool AreIntersect(int x1, int x2, int y1, int y2)
 	    {
 	        return x1 <= y2 && x2 >= y1;
 	    }
